@@ -21,19 +21,11 @@ class PaymentProviderCurrency(models.Model):
     )
     force_currency_id = fields.Many2one(
         'res.currency',
-        string='Currency id',
+        string='Currency',
     )
 
-
     def compute_fees(self, amount, currency_id, partner_country_id):
-        """Compute fees for payment processing with currency support.
-        
-        :param float amount: The amount to process
-        :param integer currency_id: ID of the currency
-        :param integer partner_country_id: ID of the partner's country
-        :return: Computed fees amount
-        :rtype: float
-        """
+        """Compute fees for payment processing with currency support."""
         fees_method_name = f'{self.provider}_compute_fees'
         fees_amount = 0
         if hasattr(self, fees_method_name):
@@ -42,31 +34,50 @@ class PaymentProviderCurrency(models.Model):
         return fees_amount
 
     def _get_available_currencies(self, partner_country_id=None):
-        """Get available currencies for this acquirer.
-        
-        :param integer partner_country_id: ID of the partner's country
-        :return: Available currencies
-        :rtype: recordset of res.currency
-        """
+        """Get available currencies for this acquirer."""
         self.ensure_one()
         
-        # If specific currencies are defined, return them
         if self.currency_ids:
             return self.currency_ids
         
-        # Otherwise return all active currencies
         return self.env['res.currency'].search([('active', '=', True)])
 
     def _is_currency_available(self, currency_id):
-        """Check if a currency is available for this acquirer.
-        
-        :param integer currency_id: ID of the currency to check
-        :return: True if currency is available
-        :rtype: bool
-        """
+        """Check if a currency is available for this acquirer."""
         self.ensure_one()
         
         if not self.currency_ids:
             return True
-            
+        
         return currency_id in self.currency_ids.ids
+
+
+class SaleOrder(models.Model):
+    _inherit = 'sale.order'
+    
+    def _convert_to_currency(self, target_currency):
+        """Convert the sale order to a different currency."""
+        self.ensure_one()
+        
+        if self.currency_id == target_currency:
+            return True
+        
+        # Update the pricelist to use the target currency
+        pricelist = self.env['product.pricelist'].search([
+            ('currency_id', '=', target_currency.id)
+        ], limit=1)
+        
+        if not pricelist:
+            # Create a temporary pricelist if none exists
+            pricelist = self.env['product.pricelist'].create({
+                'name': f'Temporary - {target_currency.name}',
+                'currency_id': target_currency.id,
+            })
+        
+        # Update the order with the new pricelist
+        self.pricelist_id = pricelist.id
+        
+        # Recompute order lines
+        self.order_line._compute_price_unit()
+        
+        return True
