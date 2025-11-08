@@ -97,3 +97,8 @@ target/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# Odoo development environments
+odoo-16/
+odoo-19/
+odoo-*/
