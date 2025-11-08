@@ -6,7 +6,7 @@
     'author': 'Daniel Santibáñez Polanco',
     'summary': 'Payment Acquirer: Allowed Currencies or Force convert to Currency',
     'website': 'https://globalresponse.cl',
-    'version': "16.0.0",
+    'version': "19.0.0",
     'description': """Payment Acquirer Currencies or Force convert to Currency""",
     'depends': [
                 'payment',

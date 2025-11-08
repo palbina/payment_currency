@@ -1,10 +1,10 @@
-# Payment Currency - Odoo 16
+# Payment Currency - Odoo 19
 
 [![License: LGPL-3](https://img.shields.io/badge/License-LGPL--3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
-[![Odoo Version](https://img.shields.io/badge/Odoo-16.0-green.svg)](https://www.odoo.com/)
-[![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
+[![Odoo Version](https://img.shields.io/badge/Odoo-19.0-green.svg)](https://www.odoo.com/)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 
-Módulo de Odoo 16 que permite configurar monedas permitidas o forzar conversión de moneda para los métodos de pago.
+Módulo de Odoo 19 que permite configurar monedas permitidas o forzar conversión de moneda para los métodos de pago.
 
 ## 🌟 Características
 
@@ -17,8 +17,8 @@ Módulo de Odoo 16 que permite configurar monedas permitidas o forzar conversió
 
 ## 📋 Requisitos
 
-- **Odoo**: Versión 16.0 o superior
-- **Python**: 3.8 o superior
+- **Odoo**: Versión 19.0 o superior
+- **Python**: 3.10 o superior
 - **Dependencias**: Módulo `payment` de Odoo
 
 ## 🚀 Instalación
@@ -144,6 +144,13 @@ _logger.info("Payment Currency: Debug message")
 
 ## 📝 Changelog
 
+### v19.0.0 (2025-11-08)
+- ✅ Migración completa a Odoo 19
+- ✅ Compatibilidad con API v2 de pagos
+- ✅ Validación avanzada de monedas
+- ✅ Mejoras en performance y seguridad
+- ✅ Soporte para nuevas características de Odoo 19
+
 ### v16.0.0 (2025-11-07)
 - ✅ Migración completa a Odoo 16
 - ✅ Cambio de `payment.acquirer` a `payment.provider`
@@ -169,7 +176,7 @@ Este módulo está licenciado bajo **LGPL-3** (Odoo Proprietary License v1.0).
 ## 👥 Autor
 
 - **Daniel Santibáñez Polanco** - *Desarrollo inicial* - [Global Response](https://globalresponse.cl)
-- **Kilo Code** - *Migración a Odoo 16* - [GitHub](https://github.com/kilocode)
+- **Kilo Code** - *Migración a Odoo 19* - [GitHub](https://github.com/kilocode)
 
 ## 🙏 Agradecimientos
 
