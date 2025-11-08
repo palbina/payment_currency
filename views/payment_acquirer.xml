@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="payment_provider_form" model="ir.ui.view">
+            <field name="name">payment.provider.form.inherit</field>
+            <field name="model">payment.provider</field>
+            <field name="inherit_id" ref="payment.payment_provider_form"/>
+            <field name="arch" type="xml">
+                <field name="available_country_ids" position="before">
+                    <field name="currency_ids" 
+                           widget="many2many_tags"
+                           attrs="{'invisible': [('code', '=', 'none')]}"/>
+                    <field name="force_currency" 
+                           attrs="{'invisible': [('code', '=', 'none')]}"/>
+                    <field name="force_currency_id" 
+                           attrs="{
+                               'invisible': [('force_currency', '=', False)],
+                               'required': [('force_currency', '=', True)]
+                           }"
+                           options="{'no_create': True, 'no_edit': True}"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>
