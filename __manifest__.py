@@ -9,10 +9,12 @@
     'version': "19.0.0",
     'description': """Payment Acquirer Currencies or Force convert to Currency""",
     'depends': [
-                'payment',
-            ],
+        'payment',
+        'sale',
+        'website_sale',
+    ],
     'external_dependencies': {
-            'python': [],
+        'python': [],
     },
     'data': [
         'views/payment_acquirer.xml',
