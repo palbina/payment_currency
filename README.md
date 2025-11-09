@@ -4,185 +4,176 @@
 [![Odoo Version](https://img.shields.io/badge/Odoo-16.0-green.svg)](https://www.odoo.com/)
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
 
-Módulo de Odoo 16 que permite configurar monedas permitidas o forzar conversión de moneda para los métodos de pago.
+Módulo específico para Odoo 16 que permite configurar monedas permitidas o forzar la conversión de moneda para proveedores de pago. Esta rama (`16.0`) contiene la versión estable para Odoo 16. Para soporte multi-versión, consulta la rama `main` del repositorio.
 
-## 🌟 Características
+## 🌟 Características Principales
 
-- ✅ **Configuración de monedas permitidas** por método de pago
-- ✅ **Conversión forzada de moneda** cuando se requiere
+- ✅ **Configuración de monedas permitidas** por proveedor de pago
+- ✅ **Conversión forzada de moneda** automática
 - ✅ **Validación automática** de disponibilidad de monedas
 - ✅ **Cálculo de comisiones** con soporte multi-moneda
 - ✅ **Integración completa** con la API de pagos de Odoo 16
-- ✅ **Interfaz intuitiva** para configuración
+- ✅ **Interfaz intuitiva** para configuración en el backend
+- ✅ **Filtrado en frontend** para métodos de pago compatibles con la moneda del pedido
+
+## 📋 Estrategia de Versionamiento
+
+Este repositorio soporta múltiples versiones de Odoo mediante ramas dedicadas:
+
+- **Rama `main`**: Desarrollo general y multi-versión.
+- **Rama `16.0`**: Versión estable para Odoo 16 (etiquetada como `v16.0.0`).
+- Otras ramas: `17.0`, `18.0`, `19.0` para versiones futuras.
+
+Para detalles, consulta [VERSIONING_STRATEGY.md](VERSIONING_STRATEGY.md) en la rama `main`.
 
 ## 📋 Requisitos
 
-- **Odoo**: Versión 16.0 o superior
+- **Odoo**: Versión 16.0
 - **Python**: 3.8 o superior
-- **Dependencias**: Módulo `payment` de Odoo
+- **Dependencias**: Módulo `payment` de Odoo (incluido en el core)
 
 ## 🚀 Instalación
 
-### 1. Descargar el módulo
+### 1. Clonar el Repositorio
 ```bash
-# Clonar el repositorio
-git clone https://github.com/tu-usuario/payment_currency.git
+# Clonar el repositorio principal
+git clone https://github.com/palbina/payment_currency.git
 
-# O descargar el archivo ZIP y extraerlo en el directorio de addons
+# Cambiar a la rama 16.0
+cd payment_currency
+git checkout 16.0
 ```
 
 ### 2. Instalar en Odoo
-1. Copiar la carpeta `payment_currency` al directorio de addons de Odoo
-2. Ir a **Apps > Update Apps List**
-3. Buscar "Payment Currency" o "Monedas de Pago"
-4. Instalar el módulo
+1. Copia la carpeta `payment_currency` al directorio de addons de tu instancia de Odoo 16.
+2. Reinicia el servidor de Odoo.
+3. En Odoo, ve a **Apps > Actualizar Lista de Aplicaciones**.
+4. Busca "Payment Currency" e instala el módulo.
+
+### 3. Verificación
+- Accede a **Configuración > Pagos > Proveedores de Pago**.
+- Confirma que los campos de monedas aparecen en los formularios.
 
 ## ⚙️ Configuración
 
-### Configurar monedas permitidas
-1. Ir a **Configuración > Pagos > Métodos de Pago**
-2. Seleccionar un método de pago existente o crear uno nuevo
-3. En la pestaña de configuración, seleccionar las monedas permitidas en el campo "Currencies"
-4. Guardar los cambios
+### Configurar Monedas Permitidas
+1. Ve a **Configuración > Pagos > Proveedores de Pago**.
+2. Selecciona o crea un proveedor de pago.
+3. En el formulario, usa el campo **Currencies** (etiquetas múltiples) para seleccionar monedas permitidas.
+4. Guarda los cambios.
 
-### Forzar conversión de moneda
-1. Activar la opción "Force Currency"
-2. Seleccionar la moneda a la cual se forzará la conversión
-3. El sistema convertirá automáticamente todas las transacciones a esta moneda
+### Forzar Conversión de Moneda
+1. Activa la opción **Force Currency**.
+2. Selecciona la **Currency** objetivo.
+3. El sistema convertirá automáticamente los pedidos a esta moneda durante el proceso de pago.
+
+### Notas de Configuración
+- Si no se configuran monedas específicas, se permiten todas las monedas activas.
+- Asegura tasas de cambio actualizadas en **Configuración > Contabilidad > Monedas**.
 
 ## 📖 Uso
 
-### Verificar monedas disponibles
-El módulo valida automáticamente si una moneda está disponible para un método de pago:
+### En el Backend (Administración)
+- Configura proveedores en **Pagos > Proveedores de Pago**.
+- Prueba la validación: Crea un pedido con una moneda no permitida y verifica el filtrado.
 
+### En el Frontend (Tienda Website)
+- Durante el checkout, solo se muestran métodos de pago compatibles con la moneda del pedido.
+
+### Ejemplos de Código (para Desarrolladores)
 ```python
-# En código Python
+# Verificar disponibilidad de moneda
 provider = env['payment.provider'].browse(provider_id)
 is_available = provider._is_currency_available(currency_id)
+
+# Obtener monedas disponibles
 available_currencies = provider._get_available_currencies()
-```
 
-### Cálculo de comisiones con monedas
-El método `compute_fees()` considera la configuración de monedas:
-
-```python
-fees = provider.compute_fees(
-    amount=100.0,
-    currency_id=currency_id,
-    partner_country_id=country_id
-)
+# Calcular comisiones
+fees = provider.compute_fees(amount=100.0, currency_id=currency_id, partner_country_id=country_id)
 ```
 
 ## 🔄 Flujo de Funcionamiento
 
 ```mermaid
 graph TD
-    A[Transacción de Pago] --> B{¿Método tiene monedas configuradas?}
-    B -->|Sí| C[Validar moneda de la transacción]
-    B -->|No| D[Permitir cualquier moneda activa]
-    C --> E{¿Moneda permitida?}
-    D --> F{¿Forzar conversión?}
-    E -->|Sí| F
-    E -->|No| G[Rechazar transacción]
-    F -->|Sí| H[Convertir a moneda forzada]
-    F -->|No| I[Mantener moneda original]
-    H --> J[Calcular comisiones]
-    I --> J
-    J --> K[Procesar pago]
+    A[Inicio de Checkout] --> B[Obtener Moneda del Pedido]
+    B --> C[Filtrar Proveedores por Moneda]
+    C --> D{¿Proveedor Compatible?}
+    D -->|No| E[Ocultar Proveedor]
+    D -->|Sí| F{¿Forzar Conversión?}
+    F -->|Sí| G[Convertir Pedido a Moneda Forzada]
+    F -->|No| H[Proceder con Moneda Original]
+    G --> I[Calcular Comisiones]
+    H --> I
+    I --> J[Validar Pago]
 ```
 
-## 🛠️ Desarrollo
+## 🛠️ Estructura del Módulo
 
-### Estructura del módulo
 ```
 payment_currency/
-├── __init__.py              # Inicialización del módulo
-├── __manifest__.py          # Manifiesto de Odoo
-├── models/                  # Modelos de datos
+├── __init__.py               # Inicialización
+├── __manifest__.py           # Manifiesto para Odoo 16
+├── controllers/              # Controladores para website_sale
 │   ├── __init__.py
-│   └── payment_acquirer.py  # Extensión de payment.provider
-├── views/                   # Vistas XML
-│   └── payment_acquirer.xml # Formulario de proveedor de pago
-├── static/                  # Recursos estáticos (opcional)
-├── tests/                   # Tests unitarios (opcional)
-└── README.md               # Este archivo
-```
-
-### Personalización
-El módulo puede ser extendido mediante herencia:
-
-```python
-class CustomPaymentProvider(models.Model):
-    _inherit = 'payment.provider'
-    
-    def _get_available_currencies(self, partner_country_id=None):
-        # Lógica personalizada
-        return super()._get_available_currencies(partner_country_id)
+│   └── main.py               # Filtrado en frontend
+├── models/                   # Modelos extendidos
+│   ├── __init__.py
+│   └── payment_acquirer.py   # Herencia de payment.provider
+├── views/                    # Vistas XML
+│   └── payment_acquirer.xml  # Formulario extendido
+└── README.md                 # Documentación para Odoo 16
 ```
 
 ## 🐛 Troubleshooting
 
-### Problemas comunes
+### Problemas Comunes
+- **Moneda no disponible**: Verifica las monedas configuradas. Asegúrate de que la moneda del pedido esté activa.
+- **Error en conversión**: Actualiza tasas de cambio y reinicia Odoo.
+- **Método no filtrado**: Limpia caché y verifica instalación.
 
-#### Error: "Moneda no disponible"
-**Solución**: Verificar que la moneda esté configurada en las monedas permitidas del método de pago.
-
-#### Error: "Conversión fallida"
-**Solución**: Asegurarse que las tasas de cambio estén actualizadas en Odoo.
-
-#### Error: "Método de pago no encontrado"
-**Solución**: Verificar que el módulo esté instalado y el método de pago esté activo.
-
-### Logs y depuración
-Activar el modo debug para ver información detallada:
-
-```python
-import logging
-_logger = logging.getLogger(__name__)
-_logger.info("Payment Currency: Debug message")
-```
+### Depuración
+Activa logs en Odoo con `--log-level=info`. Busca entradas de `payment_currency`.
 
 ## 📝 Changelog
 
 ### v16.0.0 (2025-11-07)
-- ✅ Migración completa a Odoo 16
-- ✅ Cambio de `payment.acquirer` a `payment.provider`
-- ✅ Mejoras en la interfaz de usuario
-- ✅ Documentación completa
-- ✅ Tests mejorados
+- Migración inicial a Odoo 16.
+- Cambio de `payment.acquirer` a `payment.provider`.
+- Implementación de filtrado por moneda y conversión básica.
+- Documentación completa.
 
-### v2.0.0 (Odoo 15)
-- Versión inicial para Odoo 15
+Para changelogs de otras versiones, consulta las ramas correspondientes en el repositorio principal.
 
 ## 🤝 Contribuir
 
-1. Fork del repositorio
-2. Crear rama de feature: `git checkout -b feature/nueva-funcionalidad`
-3. Commit de cambios: `git commit -am 'Agregar nueva funcionalidad'`
-4. Push a la rama: `git push origin feature/nueva-funcionalidad`
-5. Submit Pull Request
+1. Forkea el repositorio.
+2. Crea una rama: `git checkout -b feature/nueva-funcionalidad`.
+3. Commit: `git commit -m "Agregar nueva funcionalidad"`.
+4. Push: `git push origin feature/nueva-funcionalidad`.
+5. Abre un Pull Request hacia `16.0`.
+
+Sigue [VERSIONING_STRATEGY.md](VERSIONING_STRATEGY.md) en `main`.
 
 ## 📄 Licencia
 
-Este módulo está licenciado bajo **LGPL-3** (Odoo Proprietary License v1.0).
+LGPL-3 (Odoo Proprietary License v1.0).
 
-## 👥 Autor
+## 👥 Autores y Agradecimientos
 
-- **Daniel Santibáñez Polanco** - *Desarrollo inicial* - [Global Response](https://globalresponse.cl)
-- **Kilo Code** - *Migración a Odoo 16* - [GitHub](https://github.com/kilocode)
+- **Daniel Santibáñez Polanco** - Desarrollo inicial - [Global Response](https://globalresponse.cl)
+- **Kilo Code** - Migración a Odoo 16
 
-## 🙏 Agradecimientos
-
-- Al equipo de Odoo por el excelente framework
-- A la comunidad de desarrolladores de Odoo
+Agradecimientos a la comunidad Odoo.
 
 ## 📞 Soporte
 
-Para soporte técnico:
-- **Issues**: [GitHub Issues](https://github.com/tu-usuario/payment_currency/issues)
-- **Email**: tu-email@dominio.com
-- **Website**: [Global Response](https://globalresponse.cl)
+- **Issues**: [GitHub Issues](https://github.com/palbina/payment_currency/issues)
+- **Repositorio**: [palbina/payment_currency](https://github.com/palbina/payment_currency)
+- **Email**: Contacta vía GitHub o globalresponse.cl
 
 ---
 
-**Nota**: Este módulo es parte de la suite de módulos de pago de Global Response para Odoo 16.
+**Última Actualización**: 2025-11-09  
+**Versión del Módulo**: 16.0.0 (rama específica)
