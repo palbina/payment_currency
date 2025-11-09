@@ -8,19 +8,16 @@
             <field name="arch" type="xml">
                 <field name="available_country_ids" position="before">
                     <field name="currency_ids" 
-                           widget="many2many_tags"
-                           attrs="{'invisible': [('code', '=', 'none')]}"/>
+                        widget="many2many_tags"
+                        invisible="code == 'none'"/>
                     <field name="force_currency" 
-                           attrs="{'invisible': [('code', '=', 'none')]}"/>
+                        invisible="code == 'none'"/>
                     <field name="force_currency_id" 
-                           attrs="{
-                               'invisible': [('force_currency', '=', False)],
-                               'required': [('force_currency', '=', True)]
-                           }"
-                           options="{'no_create': True, 'no_edit': True}"/>
+                        invisible="not force_currency"
+                        required="force_currency"
+                        options="{'no_create': True, 'no_edit': True}"/>
                 </field>
             </field>
         </record>
-
     </data>
 </odoo>

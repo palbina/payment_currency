@@ -31,7 +31,7 @@ graph TD
 | `16.0` | Versión estable para Odoo 16 | ✅ Activa | 16.0+ |
 | `17.0` | Versión para Odoo 17 | 🔄 Futura | 17.0+ |
 | `18.0` | Versión para Odoo 18 | 🔄 Futura | 18.0+ |
-| `19.0` | Versión para Odoo 19 | 🔄 En desarrollo | 19.0+ |
+| `19.0` | Versión para Odoo 19 | ✅ Activa | 19.0+ |
 
 ## 📦 Política de Versiones
 
@@ -52,7 +52,7 @@ MAJOR.MINOR.PATCH
 | 16.0 | ✅ Mantenimiento | LTS | 16.0.x |
 | 17.0 | 🔄 Desarrollo | Activo | 17.0.x |
 | 18.0 | 🔄 Planificación | Futuro | 18.0.x |
-| 19.0 | 🔄 Desarrollo | Activo | 19.0.x |
+| 19.0 | ✅ Mantenimiento | Activo | 19.0.x |
 
 ## 🔄 Flujo de Trabajo
 
@@ -298,7 +298,7 @@ jobs:
 ## 🔄 Roadmap
 
 ### Q1 2025
-- [ ] Completar migración a Odoo 19
+- [x] Completar migración a Odoo 19
 - [ ] Establecer CI/CD pipeline
 - [ ] Publicar en Odoo Apps Store
 
