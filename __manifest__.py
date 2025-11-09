@@ -10,6 +10,7 @@
     'description': """Payment Acquirer Currencies or Force convert to Currency""",
     'depends': [
                 'payment',
+                'sale',
             ],
     'external_dependencies': {
             'python': [],

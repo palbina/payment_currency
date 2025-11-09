@@ -115,6 +115,7 @@ graph TD
 payment_currency/
 ├── __init__.py               # Inicialización
 ├── __manifest__.py           # Manifiesto para Odoo 16
+├── PROJECT_CONTEXT.md        # Documentación técnica completa
 ├── controllers/              # Controladores para website_sale
 │   ├── __init__.py
 │   └── main.py               # Filtrado en frontend
@@ -126,6 +127,19 @@ payment_currency/
 └── README.md                 # Documentación para Odoo 16
 ```
 
+## 📚 Documentación Técnica Completa
+
+Para información detallada sobre la arquitectura, cambios realizados, integración con Payment Webpay y troubleshooting avanzado, consulta:
+
+**[PROJECT_CONTEXT.md](PROJECT_CONTEXT.md)** - Documentación técnica completa del proyecto
+
+Este archivo incluye:
+- Arquitectura detallada del módulo
+- Todos los cambios realizados para Odoo 16
+- Problemas encontrados y corregidos
+- Integración con Payment Webpay
+- Resumen técnico completo
+
 ## 🐛 Troubleshooting
 
 ### Problemas Comunes
@@ -136,13 +150,33 @@ payment_currency/
 ### Depuración
 Activa logs en Odoo con `--log-level=info`. Busca entradas de `payment_currency`.
 
+### Mejoras Recientes (2025-11-09)
+- ✅ **Logging completo** en todos los métodos para facilitar debugging
+- ✅ **Validaciones de seguridad** en conversión de moneda
+- ✅ **Manejo de excepciones** mejorado en controladores
+- ✅ **Documentación completa** con docstrings y comentarios
+- ✅ **Clase SaleOrder** añadida para conversión automática
+- ✅ **Endpoint shop_payment_validate** implementado
+
 ## 📝 Changelog
 
-### v16.0.0 (2025-11-07)
-- Migración inicial a Odoo 16.
-- Cambio de `payment.acquirer` a `payment.provider`.
-- Implementación de filtrado por moneda y conversión básica.
-- Documentación completa.
+### v16.0.0 (2025-11-09)
+- ✅ **Migración completa** a Odoo 16
+- ✅ **Cambio de `payment.acquirer` a `payment.provider`**
+- ✅ **Implementación de filtrado por moneda** y conversión básica
+- ✅ **Clase SaleOrder añadida** con método `_convert_to_currency()`
+- ✅ **Endpoint `shop_payment_validate()`** implementado para conversión automática
+- ✅ **Logging completo** en todos los métodos (INFO, DEBUG, ERROR)
+- ✅ **Validaciones de seguridad** implementadas
+- ✅ **Documentación completa** con docstrings y comentarios
+- ✅ **Archivo PROJECT_CONTEXT.md** creado con documentación técnica detallada
+- ✅ **Corrección de referencias XML** (`payment.payment_provider_form`)
+- ✅ **Actualización de campo `provider` a `provider_code`**
+
+### v16.0.0-beta (2025-11-07)
+- Migración inicial a Odoo 16
+- Cambio básico de `payment.acquirer` a `payment.provider`
+- Implementación inicial de filtrado por moneda
 
 Para changelogs de otras versiones, consulta las ramas correspondientes en el repositorio principal.
 
@@ -175,5 +209,7 @@ Agradecimientos a la comunidad Odoo.
 
 ---
 
-**Última Actualización**: 2025-11-09  
-**Versión del Módulo**: 16.0.0 (rama específica)
+**Última Actualización**: 2025-11-09
+**Versión del Módulo**: 16.0.0
+**Rama**: 16.0
+**Estado**: ✅ Producción-ready
