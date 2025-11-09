@@ -1,41 +1,35 @@
-# Payment Currency - Módulo Multi-Versión para Odoo
+# Payment Currency - Odoo 19
 
 [![License: LGPL-3](https://img.shields.io/badge/License-LGPL--3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
-[![Odoo Versions](https://img.shields.io/badge/Odoo-16.0%20%7C%2017.0%20%7C%2018.0%20%7C%2019.0-green.svg)](https://www.odoo.com/)
+[![Odoo Version](https://img.shields.io/badge/Odoo-19.0-green.svg)](https://www.odoo.com/)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 
-Módulo de Odoo que permite configurar monedas permitidas o forzar la conversión de moneda para proveedores de pago. Soporta múltiples versiones de Odoo mediante una estrategia de ramas dedicadas.
+Módulo específico para Odoo 19 que permite configurar monedas permitidas o forzar la conversión de moneda para proveedores de pago. Esta rama (`19.0`) contiene la versión estable para Odoo 19. Para soporte multi-versión, consulta la rama `main` del repositorio.
 
 ## 🌟 Características Principales
 
 - ✅ **Configuración de monedas permitidas** por proveedor de pago
-- ✅ **Conversión forzada de moneda** automática
+- ✅ **Conversión forzada de moneda** automática con soporte para pricelists
 - ✅ **Validación automática** de disponibilidad de monedas
-- ✅ **Cálculo de comisiones** con soporte multi-moneda
-- ✅ **Integración completa** con la API de pagos de Odoo
+- ✅ **Cálculo de comisiones** con soporte multi-moneda y API v2
+- ✅ **Integración completa** con la API de pagos de Odoo 19
 - ✅ **Interfaz intuitiva** para configuración en el backend
 - ✅ **Filtrado en frontend** para métodos de pago compatibles con la moneda del pedido
-- ✅ **Soporte para pricelists** y recomputo de líneas de pedido durante conversiones
+- ✅ **Soporte para recomputo** de líneas de pedido durante conversiones
 
-## 📋 Estrategia de Versionamiento y Ramas
+## 📋 Estrategia de Versionamiento
 
-Este repositorio utiliza una estructura multi-rama para mantener compatibilidad con diferentes versiones de Odoo:
+Este repositorio soporta múltiples versiones de Odoo mediante ramas dedicadas:
 
-- **Rama `main`**: Rama principal para desarrollo general, documentación y estrategia de versionamiento. Contiene código base y configuraciones compartidas.
-- **Rama `16.0`**: Versión específica y estable para Odoo 16 (etiquetada como `v16.0.0`).
-- **Rama `17.0`**: Versión para Odoo 17 (en desarrollo).
-- **Rama `18.0`**: Versión para Odoo 18 (en desarrollo).
-- **Rama `19.0`**: Versión para Odoo 19 (etiquetada como `v19.0.0`).
+- **Rama `main`**: Desarrollo general y multi-versión.
+- **Rama `19.0`**: Versión estable para Odoo 19 (etiquetada como `v19.0.0`).
+- Otras ramas: `16.0` para Odoo 16, y futuras para 17.0, 18.0.
 
-Para usar una versión específica:
-1. Cambia a la rama correspondiente: `git checkout 19.0`
-2. Instala desde esa rama en tu instancia de Odoo.
-
-Consulta [VERSIONING_STRATEGY.md](VERSIONING_STRATEGY.md) para detalles completos sobre el flujo de trabajo, merges y releases.
+Para detalles, consulta [VERSIONING_STRATEGY.md](VERSIONING_STRATEGY.md) en la rama `main`.
 
 ## 📋 Requisitos
 
-- **Odoo**: Versión compatible con la rama seleccionada (16.0+ recomendada)
+- **Odoo**: Versión 19.0
 - **Python**: 3.10 o superior
 - **Dependencias**: Módulo `payment` de Odoo (incluido en el core)
 
@@ -46,13 +40,13 @@ Consulta [VERSIONING_STRATEGY.md](VERSIONING_STRATEGY.md) para detalles completo
 # Clonar el repositorio principal
 git clone https://github.com/palbina/payment_currency.git
 
-# Cambiar a la rama deseada (ejemplo para Odoo 19)
+# Cambiar a la rama 19.0
 cd payment_currency
 git checkout 19.0
 ```
 
 ### 2. Instalar en Odoo
-1. Copia la carpeta `payment_currency` al directorio de addons de tu instancia de Odoo.
+1. Copia la carpeta `payment_currency` al directorio de addons de tu instancia de Odoo 19.
 2. Reinicia el servidor de Odoo.
 3. En Odoo, ve a **Apps > Actualizar Lista de Aplicaciones**.
 4. Busca "Payment Currency" e instala el módulo.
@@ -71,21 +65,21 @@ git checkout 19.0
 
 ### Forzar Conversión de Moneda
 1. Activa la opción **Force Currency**.
-2. Selecciona la **Currency** objetivo en el campo correspondiente.
+2. Selecciona la **Currency** objetivo.
 3. El sistema convertirá automáticamente los pedidos a esta moneda durante el proceso de pago, actualizando la pricelist y recomputando precios.
 
 ### Notas de Configuración
 - Si no se configuran monedas específicas, se permiten todas las monedas activas.
-- La conversión crea pricelists temporales si es necesario y asegura compatibilidad con países y partners.
+- La conversión crea pricelists temporales si es necesario y asegura compatibilidad con API v2.
 
 ## 📖 Uso
 
 ### En el Backend (Administración)
 - Configura proveedores en **Pagos > Proveedores de Pago**.
-- Prueba la validación: Crea un pedido con una moneda no permitida y verifica que se filtre en el frontend.
+- Prueba la validación: Crea un pedido con una moneda no permitida y verifica el filtrado.
 
 ### En el Frontend (Tienda Website)
-- Durante el checkout, solo se muestran métodos de pago compatibles con la moneda del pedido.
+- Durante el checkout, solo se muestran métodos de pago compatibles con la moneda del pedido (usando `payment_methods_sudo`).
 - Si se fuerza una conversión, el pedido se ajusta automáticamente antes de validar el pago.
 
 ### Ejemplos de Código (para Desarrolladores)
@@ -99,6 +93,9 @@ available_currencies = provider._get_available_currencies()
 
 # Calcular comisiones
 fees = provider.compute_fees(amount=100.0, currency_id=currency_id, partner_country_id=country_id)
+
+# Convertir pedido (en sale.order)
+order._convert_to_currency(target_currency)
 ```
 
 ## 🔄 Flujo de Funcionamiento
@@ -123,7 +120,7 @@ graph TD
 ```
 payment_currency/
 ├── __init__.py               # Inicialización
-├── __manifest__.py           # Manifiesto (versión por rama)
+├── __manifest__.py           # Manifiesto para Odoo 19
 ├── controllers/              # Controladores para website_sale
 │   ├── __init__.py
 │   └── main.py               # Filtrado y conversión en frontend
@@ -132,20 +129,18 @@ payment_currency/
 │   └── payment_acquirer.py   # Herencia de payment.provider y sale.order
 ├── views/                    # Vistas XML
 │   └── payment_acquirer.xml  # Formulario extendido
-├── README.md                 # Documentación principal
-├── VERSIONING_STRATEGY.md    # Estrategia de ramas
-└── MIGRACION_*.md            # Guías de migración por versión
+└── README.md                 # Documentación para Odoo 19
 ```
 
 ## 🐛 Troubleshooting
 
 ### Problemas Comunes
-- **Moneda no disponible**: Verifica las monedas configuradas en el proveedor. Asegúrate de que la moneda del pedido esté activa en Odoo.
-- **Error en conversión**: Actualiza las tasas de cambio en **Configuración > Contabilidad > Monedas**. Verifica pricelists disponibles.
-- **Método no filtrado**: Reinicia Odoo y actualiza la caché del navegador. Confirma que el controlador esté cargado.
+- **Moneda no disponible**: Verifica las monedas configuradas. Asegúrate de que la moneda del pedido esté activa.
+- **Error en conversión**: Actualiza tasas de cambio y verifica pricelists en **Configuración > Contabilidad > Monedas**.
+- **Método no filtrado**: Reinicia Odoo, limpia caché y confirma compatibilidad con API v2.
 
 ### Depuración
-Activa logs en Odoo con `--log-level=info`. Busca entradas de `payment_currency` para detalles.
+Activa logs en Odoo con `--log-level=info`. Busca entradas de `payment_currency`.
 
 ## 📝 Changelog
 
@@ -153,35 +148,30 @@ Activa logs en Odoo con `--log-level=info`. Busca entradas de `payment_currency`
 - Migración completa a Odoo 19 con soporte para API v2 de pagos.
 - Adición de herencia en `sale.order` para conversión de pricelists.
 - Optimizaciones en controlador para `payment_methods_sudo`.
-- Mejoras en validación y performance.
+- Mejoras en validación, performance y seguridad.
 
-### v16.0.0 (2025-11-07)
-- Migración inicial a Odoo 16.
-- Cambio de `payment.acquirer` a `payment.provider`.
-- Implementación básica de filtrado por moneda.
-
-Para changelogs completos por versión, consulta las ramas específicas.
+Para changelogs de otras versiones, consulta las ramas correspondientes en el repositorio principal.
 
 ## 🤝 Contribuir
 
 1. Forkea el repositorio.
-2. Crea una rama en la versión relevante: `git checkout -b feature/nueva-funcionalidad 19.0`.
+2. Crea una rama: `git checkout -b feature/nueva-funcionalidad`.
 3. Commit: `git commit -m "Agregar nueva funcionalidad"`.
 4. Push: `git push origin feature/nueva-funcionalidad`.
-5. Abre un Pull Request hacia la rama correspondiente.
+5. Abre un Pull Request hacia `19.0`.
 
-Sigue las guías en [VERSIONING_STRATEGY.md](VERSIONING_STRATEGY.md).
+Sigue [VERSIONING_STRATEGY.md](VERSIONING_STRATEGY.md) en `main`.
 
 ## 📄 Licencia
 
-LGPL-3 (Odoo Proprietary License v1.0). Ver [LICENSE](LICENSE) para detalles.
+LGPL-3 (Odoo Proprietary License v1.0).
 
 ## 👥 Autores y Agradecimientos
 
 - **Daniel Santibáñez Polanco** - Desarrollo inicial - [Global Response](https://globalresponse.cl)
-- **Kilo Code** - Migraciones y optimizaciones multi-versión
+- **Kilo Code** - Migración a Odoo 19
 
-Agradecimientos a la comunidad Odoo por el framework y soporte.
+Agradecimientos a la comunidad Odoo.
 
 ## 📞 Soporte
 
@@ -192,4 +182,4 @@ Agradecimientos a la comunidad Odoo por el framework y soporte.
 ---
 
 **Última Actualización**: 2025-11-09  
-**Versión del Módulo**: Multi-versión (ver rama específica)
+**Versión del Módulo**: 19.0.0 (rama específica)
