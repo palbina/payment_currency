@@ -4,28 +4,27 @@
 [![Odoo Versions](https://img.shields.io/badge/Odoo-16.0%20%7C%2017.0%20%7C%2018.0%20%7C%2019.0-green.svg)](https://www.odoo.com/)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 
-Módulo de Odoo que permite configurar monedas permitidas o forzar la conversión de moneda para proveedores de pago. Soporta múltiples versiones de Odoo mediante una estrategia de ramas dedicadas.
+Módulo de Odoo que permite configurar monedas permitidas o forzar la conversión de moneda para proveedores de pago. Esta rama `main` sirve como punto de entrada multi-versión, con ramas específicas para cada versión de Odoo. La última versión estable es para Odoo 19 (rama `19.0`).
 
 ## 🌟 Características Principales
 
 - ✅ **Configuración de monedas permitidas** por proveedor de pago
-- ✅ **Conversión forzada de moneda** automática
+- ✅ **Conversión forzada de moneda** automática con soporte para pricelists
 - ✅ **Validación automática** de disponibilidad de monedas
-- ✅ **Cálculo de comisiones** con soporte multi-moneda
+- ✅ **Cálculo de comisiones** con soporte multi-moneda y API v2
 - ✅ **Integración completa** con la API de pagos de Odoo
 - ✅ **Interfaz intuitiva** para configuración en el backend
 - ✅ **Filtrado en frontend** para métodos de pago compatibles con la moneda del pedido
-- ✅ **Soporte para pricelists** y recomputo de líneas de pedido durante conversiones
+- ✅ **Soporte para recomputo** de líneas de pedido durante conversiones
 
 ## 📋 Estrategia de Versionamiento y Ramas
 
 Este repositorio utiliza una estructura multi-rama para mantener compatibilidad con diferentes versiones de Odoo:
 
-- **Rama `main`**: Rama principal para desarrollo general, documentación y estrategia de versionamiento. Contiene código base y configuraciones compartidas.
+- **Rama `main`**: Rama principal para desarrollo general, documentación y estrategia de versionamiento. Refleja la última versión (Odoo 19).
 - **Rama `16.0`**: Versión específica y estable para Odoo 16 (etiquetada como `v16.0.0`).
-- **Rama `17.0`**: Versión para Odoo 17 (en desarrollo).
-- **Rama `18.0`**: Versión para Odoo 18 (en desarrollo).
-- **Rama `19.0`**: Versión para Odoo 19 (etiquetada como `v19.0.0`).
+- **Rama `19.0`**: Versión específica y estable para Odoo 19 (etiquetada como `v19.0.0`).
+- Ramas futuras: `17.0`, `18.0` para versiones intermedias.
 
 Para usar una versión específica:
 1. Cambia a la rama correspondiente: `git checkout 19.0`
@@ -192,4 +191,4 @@ Agradecimientos a la comunidad Odoo por el framework y soporte.
 ---
 
 **Última Actualización**: 2025-11-09  
-**Versión del Módulo**: Multi-versión (ver rama específica)
+**Versión del Módulo**: Multi-versión (última: 19.0.0)
