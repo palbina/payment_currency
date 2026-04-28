@@ -18,9 +18,9 @@ class WebsiteSaleCurrency(WebsiteSale):
         
         # Filter payment providers by currency
         if 'payment_methods_sudo' in vals:
-            # v19 uses payment_methods_sudo
+            # v19 uses payment_methods_sudo and provider_ids
             filtered_methods = vals['payment_methods_sudo'].filtered(
-                lambda pm: pm.provider_id._is_currency_available(order_currency.id)
+                lambda pm: any(p._is_currency_available(order_currency.id) for p in pm.provider_ids)
             )
             vals['payment_methods_sudo'] = filtered_methods
         
